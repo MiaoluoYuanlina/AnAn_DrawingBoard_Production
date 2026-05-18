@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>夏目安安立绘生成网站</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; 
+            display: flex; flex-direction: column; min-height: 100vh;
+            color: #333; overflow-x: hidden; background-color: #f4f7fb; 
+        }
+
+        .main-content { display: flex; flex: 1; padding: 30px; width: 100%; z-index: 1; }
+
+        .fluid-bg {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; overflow: hidden; background: #e0c3fc; 
+            filter: blur(80px); -webkit-filter: blur(80px);
+        }
+        .blob { position: absolute; border-radius: 43% 57% 65% 35% / 51% 45% 55% 49%; opacity: 0.8; will-change: transform; }
+        .blob-1 { width: 50vw; height: 50vw; background: #ff9a9e; top: -10%; left: -10%; animation: moveBlob1 15s infinite alternate ease-in-out; }
+        .blob-2 { width: 45vw; height: 45vw; background: #fecfef; top: 40%; left: 60%; animation: moveBlob2 18s infinite alternate ease-in-out; }
+        .blob-3 { width: 55vw; height: 55vw; background: #a1c4fd; top: 50%; left: -20%; animation: moveBlob3 20s infinite alternate ease-in-out; }
+        .blob-4 { width: 40vw; height: 40vw; background: #8fd3f4; top: -20%; left: 50%; animation: moveBlob4 16s infinite alternate ease-in-out; }
+
+        @keyframes moveBlob1 { 0% { transform: translate(0, 0) scale(1) rotate(0deg); } 50% { transform: translate(20vw, 20vh) scale(1.1) rotate(90deg); } 100% { transform: translate(-10vw, 40vh) scale(0.9) rotate(180deg); } }
+        @keyframes moveBlob2 { 0% { transform: translate(0, 0) scale(1) rotate(0deg); } 50% { transform: translate(-30vw, -20vh) scale(1.2) rotate(-90deg); } 100% { transform: translate(-10vw, 10vh) scale(0.8) rotate(-180deg); } }
+        @keyframes moveBlob3 { 0% { transform: translate(0, 0) scale(1) rotate(0deg); } 50% { transform: translate(40vw, -10vh) scale(0.9) rotate(90deg); } 100% { transform: translate(20vw, -30vh) scale(1.1) rotate(180deg); } }
+        @keyframes moveBlob4 { 0% { transform: translate(0, 0) scale(1) rotate(0deg); } 50% { transform: translate(-20vw, 30vh) scale(1.3) rotate(-90deg); } 100% { transform: translate(10vw, 20vh) scale(0.9) rotate(90deg); } }
+
+        .butterfly-wrap {
+            position: fixed; pointer-events: none; z-index: 9999;
+            color: var(--fly-color); drop-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            animation: flyOut var(--duration) cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        .butterfly-wing {
+            width: 24px; height: 24px; animation: flutter 0.12s infinite alternate ease-in-out;
+            transform-origin: center; display: flex; align-items: center; justify-content: center;
+        }
+        @keyframes flyOut { 0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; } 100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.2) rotate(var(--rot)); opacity: 0; } }
+        @keyframes flutter { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(70deg); } }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08); border-radius: 20px;
+        }
+
+        .controls { width: 380px; padding: 25px; margin-right: 30px; max-height: calc(100vh - 120px); overflow-y: auto; transition: all 0.3s ease; flex-shrink: 0; }
+        .controls:hover { box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15); }
+        .preview { flex: 1; padding: 25px; display: flex; flex-direction: column; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
+
+        h3 { margin-bottom: 20px; color: #444; font-weight: 600; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #555; }
+        
+        select, textarea, input[type="number"], input[type="file"] { 
+            width: 100%; padding: 10px 12px; background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 10px; outline: none;
+            font-family: inherit; font-size: 14px; transition: all 0.3s ease;
+        }
+        select:focus, textarea:focus, input[type="number"]:focus { background: rgba(255, 255, 255, 0.9); border-color: #a1c4fd; box-shadow: 0 0 0 3px rgba(161, 196, 253, 0.3); }
+        textarea { height: 80px; resize: vertical; }
+        
+        /* 滑块样式美化 */
+        input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; margin-bottom: 10px;}
+        input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.8); border-radius: 3px; border: 1px solid #ddd;}
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #a1c4fd; margin-top: -6px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
+        
+        .radio-group { display: flex; gap: 15px; font-size: 14px; margin-bottom: 10px; align-items: center;}
+        .radio-group label { margin: 0; font-weight: normal; cursor: pointer; display: flex; align-items: center; gap: 5px;}
+        input[type="radio"] { accent-color: #a1c4fd; transform: scale(1.1); cursor: pointer;}
+
+        input[type="color"] { -webkit-appearance: none; border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0; }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; border-radius: 8px; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: bold; letter-spacing: 1px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); display: block; text-align: center; text-decoration: none; }
+        .btn-primary { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); color: #444; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(161, 196, 253, 0.4); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(161, 196, 253, 0.6); background: linear-gradient(135deg, #8cb5f9 0%, #aae0fa 100%); }
+        .btn-primary:active { transform: translateY(1px); }
+        .btn-success { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); color: #333; display: none; box-shadow: 0 4px 15px rgba(132, 250, 176, 0.4); }
+        .btn-success:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(132, 250, 176, 0.6); }
+
+        .img-container { flex: 1; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.2); border: 2px dashed rgba(255, 255, 255, 0.8); border-radius: 16px; overflow: hidden; margin-bottom: 15px; min-height: 400px; transition: all 0.3s ease; padding: 10px; }
+        .img-container:hover { background: rgba(255, 255, 255, 0.4); }
+        img#result-img { max-width: 100%; max-height: 80vh; display: none; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+        .loading { color: #555; font-size: 14px; display: none; text-align: center; margin-bottom: 15px; font-weight: bold; }
+        .loading::after { content: '...'; animation: dots 1.5s steps(4, end) infinite; }
+        @keyframes dots { 0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); } 40% { color: #555; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); } 60% { text-shadow: .25em 0 0 #555, .5em 0 0 rgba(0,0,0,0); } 80%, 100% { text-shadow: .25em 0 0 #555, .5em 0 0 #555; } }
+
+        #custom-bg-div { display: none; margin-top: 10px; }
+
+        /* 底部备案与 GitHub 样式 */
+        .footer {
+            text-align: center; padding: 15px; color: #555; font-size: 13px; background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.5);
+            display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 20px; z-index: 10;
+        }
+        .footer a { color: #444; text-decoration: none; transition: color 0.3s; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+        .footer a:hover { color: #000; }
+        .github-icon { width: 20px; height: 20px; fill: currentColor; }
+
+        @media (max-width: 850px) {
+            .main-content { flex-direction: column; padding: 15px; }
+            .controls { width: 100%; margin-right: 0; margin-bottom: 20px; max-height: none; }
+            .preview { width: 100%; padding: 20px 15px; }
+            .img-container { min-height: 250px; }
+            .blob { width: 90vw; height: 90vw; }
+            .footer { flex-direction: column; gap: 10px; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="fluid-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
+    </div>
+
+    <!-- 主体内容区 -->
+    <div class="main-content">
+        <div class="controls glass-panel">
+            <h3>✨ 编辑控制台</h3>
+            
+            <div class="form-group">
+                <label>1. 背景设置</label>
+                <div class="radio-group" onchange="toggleBgMode()">
+                    <label><input type="radio" name="bg_mode" value="default" checked> 默认背景</label>
+                    <label><input type="radio" name="bg_mode" value="custom"> 文件上传</label>
+                </div>
+                <select id="bg-select" onchange="updatePreview()"></select>
+                <div id="custom-bg-div">
+                    <input type="file" id="custom-bg-file" accept="image/png, image/jpeg" onchange="handleFileUpload(event)">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>2. 选择人物立绘</label>
+                <select id="portrait-select" onchange="updatePreview()"></select>
+            </div>
+
+            <!-- 立绘位置与缩放调整 -->
+            <div class="form-group" style="background: rgba(255,255,255,0.4); padding: 15px; border-radius: 10px;">
+                <label style="margin-bottom: 10px;">🎨 调整立绘位置与大小</label>
+                
+                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">大小缩放 (<span id="val-scale">100</span>%)</div>
+                <input type="range" id="pt-scale" min="10" max="300" value="100" oninput="updateRangeVal('scale')" onchange="debounceUpdate()">
+                
+                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">水平位置 X (<span id="val-x">0</span>%)</div>
+                <input type="range" id="pt-x" min="-100" max="100" value="0" oninput="updateRangeVal('x')" onchange="debounceUpdate()">
+                
+                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">垂直位置 Y (<span id="val-y">0</span>%)</div>
+                <input type="range" id="pt-y" min="-100" max="100" value="0" oninput="updateRangeVal('y')" onchange="debounceUpdate()">
+            </div>
+
+            <div class="form-group">
+                <label>3. 字体与大小</label>
+                <div style="display: flex; gap: 10px;">
+                    <select id="font-select" style="flex: 2;" onchange="updatePreview()"></select>
+                    <input type="number" id="size-input" style="flex: 1;" value="28" onchange="updatePreview()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>4. 文本内容 (支持换行)</label>
+                <textarea id="text-input" onkeyup="debounceUpdate()">何意味</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>5. 样式设置</label>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <input type="color" id="color-input" value="#333333" onchange="updatePreview()">
+                    <div class="radio-group" style="margin:0;" onchange="updatePreview()">
+                        <label><input type="radio" name="align" value="left"> 左</label>
+                        <label><input type="radio" name="align" value="center" checked> 中</label>
+                        <label><input type="radio" name="align" value="right"> 右</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="loading" id="loading-text">魔法合成中</div>
+            <button class="btn btn-primary" onclick="forceGenerate()">✨ 立即生成</button>
+            <a id="download-btn" class="btn btn-success" download="夏目安安_合成图.jpg">⬇️ 保存 / 下载图片</a>
+        </div>
+
+        <div class="preview glass-panel" id="preview-area">
+            <h3>🖼️ 最终效果预览</h3>
+            <div class="img-container">
+                <span id="placeholder-text" style="color:#777; font-weight: bold; font-size: 16px; letter-spacing: 1px;">请在上方设置并生成特效图片</span>
+                <img id="result-img" src="" alt="预览图">
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部备案与链接区 -->
+    <div class="footer">
+        <span id="footer-copyright">加载中...</span>
+        <a id="footer-github" href="#" target="_blank" title="访问 GitHub">
+            <svg class="github-icon" viewBox="0 0 16 16" version="1.1" aria-hidden="true">
+                <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+            GitHub
+        </a>
+    </div>
+
+    <script>
+        // ================= 网页配置 =================
+        const CONFIG = {
+            API_URL: './api.php',
+            COPYRIGHT: '© 2025 XiaoMiao_ICa 辽ICP备2025069396号-2',
+            GITHUB_LINK: 'https://github.com/MiaoluoYuanlina/AnAn_DrawingBoard_Production' 
+        };
+        // =================================================================
+
+        // 页面加载时注入配置信息
+        document.getElementById('footer-copyright').innerText = CONFIG.COPYRIGHT;
+        document.getElementById('footer-github').href = CONFIG.GITHUB_LINK;
+
+        // JS 特效：标签页切换修改标题
+        const originalTitle = document.title; 
+        let titleTimeout;
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                clearTimeout(titleTimeout); document.title = '(つд⊂) 诶，怎么走啦？';
+            } else {
+                document.title = '(*^▽^*) 欢迎回来！';
+                titleTimeout = setTimeout(() => { document.title = originalTitle; }, 1500);
+            }
+        });
+
+        // 纯色 SVG 蝴蝶
+        const butterflySVG = `
+            <svg viewBox="0 0 1024 1024" width="100%" height="100%" fill="currentColor">
+                <path d="M512 490.666667C418.133333 256 221.866667 128 42.666667 170.666667-85.333333 202.666667 0 384 170.666667 469.333333 341.333333 554.666667 469.333333 469.333333 512 490.666667z"/>
+                <path d="M512 490.666667C605.866667 256 802.133333 128 981.333333 170.666667 1109.333333 202.666667 1024 384 853.333333 469.333333 682.666667 554.666667 554.666667 469.333333 512 490.666667z"/>
+                <path d="M512 533.333333C418.133333 768 298.666667 853.333333 170.666667 810.666667 85.333333 789.333333 85.333333 640 256 597.333333 384 554.666667 469.333333 554.666667 512 533.333333z"/>
+                <path d="M512 533.333333C605.866667 768 725.333333 853.333333 853.333333 810.666667 938.666667 789.333333 938.666667 640 768 597.333333 640 554.666667 554.666667 554.666667 512 533.333333z"/>
+            </svg>
+        `;
+
+        document.addEventListener('click', function(e) {
+            // 防止点击底部链接时触发蝴蝶
+            if(e.target.closest('.footer')) return; 
+
+            const butterflyCount = Math.floor(Math.random() * 3) + 4; 
+            const isRedWave = Math.random() < 0.1;
+            
+            for(let i = 0; i < butterflyCount; i++) {
+                let wrap = document.createElement('div');
+                wrap.className = 'butterfly-wrap';
+                wrap.style.left = e.clientX + 'px'; wrap.style.top = e.clientY + 'px';
+                
+                let flyColor, duration, removeTime, distance;
+                if (isRedWave) {
+                    flyColor = '#ff0000'; duration = '20s'; removeTime = 20000; distance = 800 + Math.random() * 800; 
+                } else {
+                    flyColor = `hsl(${Math.floor(Math.random() * 360)}, 80%, 65%)`; duration = '1.2s'; removeTime = 1200; distance = 60 + Math.random() * 90;   
+                }
+
+                let angle = Math.random() * Math.PI * 2;
+                wrap.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+                wrap.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+                wrap.style.setProperty('--fly-color', flyColor);
+                wrap.style.setProperty('--rot', (Math.random() * 60 - 30) + 'deg');
+                wrap.style.setProperty('--duration', duration);
+                
+                let wing = document.createElement('div');
+                wing.className = 'butterfly-wing'; wing.innerHTML = butterflySVG; 
+                wrap.appendChild(wing); document.body.appendChild(wrap);
+                setTimeout(() => wrap.remove(), removeTime);
+            }
+        });
+
+        let customBgBase64 = ""; 
+        let timeout = null;
+
+        // 更新滑块显示的数值
+        function updateRangeVal(type) {
+            document.getElementById(`val-${type}`).innerText = document.getElementById(`pt-${type}`).value;
+        }
+
+        function debounceUpdate() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => updatePreview(false), 600);
+        }
+
+        function forceGenerate() { updatePreview(true); }
+
+        function toggleBgMode() {
+            const mode = document.querySelector('input[name="bg_mode"]:checked').value;
+            if (mode === 'default') {
+                document.getElementById('bg-select').style.display = 'block';
+                document.getElementById('custom-bg-div').style.display = 'none';
+                updatePreview(false);
+            } else {
+                document.getElementById('bg-select').style.display = 'none';
+                document.getElementById('custom-bg-div').style.display = 'block';
+                if(customBgBase64) updatePreview(false); 
+            }
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) { customBgBase64 = e.target.result; updatePreview(false); };
+            reader.readAsDataURL(file);
+        }
+
+        window.onload = function() {
+            fetch(`${CONFIG.API_URL}?action=get_init_data`)
+                .then(response => response.json())
+                .then(res => {
+                    if(res.status === 'success') {
+                        const bgSelect = document.getElementById('bg-select');
+                        res.data.bg.forEach(img => bgSelect.add(new Option(img, img)));
+
+                        const portraitSelect = document.getElementById('portrait-select');
+                        res.data.img.forEach(img => portraitSelect.add(new Option(img, img)));
+
+                        const fontSelect = document.getElementById('font-select');
+                        res.data.fonts.forEach(font => fontSelect.add(new Option(font, font)));
+
+                        if(res.data.img.length > 0 && res.data.fonts.length > 0) updatePreview(false);
+                    }
+                })
+                .catch(err => console.error("加载初始数据失败", err));
+        };
+
+        function updatePreview(isManualClick = false) {
+            const bgMode = document.querySelector('input[name="bg_mode"]:checked').value;
+            const bgName = document.getElementById('bg-select').value;
+            const portrait = document.getElementById('portrait-select').value;
+            const font = document.getElementById('font-select').value;
+            
+            if (!portrait || !font) return;
+            if (bgMode === 'custom' && !customBgBase64) return; 
+
+            document.getElementById('loading-text').style.display = 'block';
+            document.getElementById('download-btn').style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('bg_type', bgMode);
+            formData.append('bg_name', bgName);
+            formData.append('bg_base64', customBgBase64);
+            formData.append('portrait', portrait);
+            formData.append('font', font);
+            formData.append('size', document.getElementById('size-input').value);
+            formData.append('color', document.getElementById('color-input').value);
+            formData.append('align', document.querySelector('input[name="align"]:checked').value);
+            formData.append('text', document.getElementById('text-input').value);
+            
+            // 向后端发送位置和缩放参数
+            formData.append('pt_scale', document.getElementById('pt-scale').value);
+            formData.append('pt_x', document.getElementById('pt-x').value);
+            formData.append('pt_y', document.getElementById('pt-y').value);
+
+            fetch(`${CONFIG.API_URL}?action=render`, { method: 'POST', body: formData })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading-text').style.display = 'none';
+                if (data.status === 'success') {
+                    const imgEl = document.getElementById('result-img');
+                    imgEl.src = data.image; imgEl.style.display = 'block';
+                    document.getElementById('placeholder-text').style.display = 'none';
+                    
+                    const downloadBtn = document.getElementById('download-btn');
+                    downloadBtn.href = data.image; downloadBtn.style.display = 'block';
+
+                    if (isManualClick && window.innerWidth <= 850) {
+                        document.getElementById('preview-area').scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else {
+                    alert('生成失败: ' + data.error);
+                }
+            })
+            .catch(err => {
+                document.getElementById('loading-text').style.display = 'none';
+                alert('网络请求失败');
+            });
+        }
+    </script>
+</body>
+</html>
