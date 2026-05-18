@@ -1,0 +1,2 @@
+# AnAn_DrawingBoard_Production
+使用PHP后端+HTML前端制作，可以生产游戏魔法少女的魔女审判中的角色夏目安安(Natsume An-An)手中拿着画板自定义画板中的内容的图片立绘图片。
