@@ -4,7 +4,7 @@
 
 一个基于 PHP 后端 + HTML 前端的立绘合成工具，可以为《魔法少女的魔女审判》中的角色 夏目安安 (Natsume An-An) 手中所持的画板自定义文字或背景，快速生成专属立绘图片。
 
-在线体验：anan.ica.wiki
+在线体验：https://anan.ica.wiki
 
 ---
 
