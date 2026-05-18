@@ -26,12 +26,10 @@
 ---
 
 🛠 技术栈
-
-层级 技术
-后端 PHP（提供 API 接口）
-前端 HTML + CSS + JavaScript
-字体 服务器存储的 TrueType 字体
-图像 GD 库 / Imagick 合成（视服务器环境）
+| 层级 | 技术 |
+|------|------|
+| 后端 | 技术 |
+| 前端 | HTML + CSS + JavaScript |
 
 ---
 
