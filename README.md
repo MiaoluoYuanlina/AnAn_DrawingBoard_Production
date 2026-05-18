@@ -63,19 +63,20 @@
 
 请求参数
 
-参数 类型 必填 说明
-bg_type 文本 是 背景类型：default（使用服务器背景）或 custom（自定义上传）
-bg_name 文本 否 当 bg_type=default 时必填，背景文件名（如 bg1.jpg）
-bg_base64 文本 否 当 bg_type=custom 时必填，自定义背景图的 Base64 数据
-portrait 文本 是 立绘文件名（如 role1.png），需存在于服务器 img 目录
-font 文本 是 字体文件名（如 simhei.ttf），需存在于服务器 ttf 目录
-text 文本 是 渲染的文字，支持 \n 换行
-size 整数 否 字体大小，默认 24
-color 文本 否 文字颜色 HEX 码，例如 #ff0000，默认 #000000
-align 文本 否 对齐方式：left，center，right，默认 center
-pt_scale 整数 否 立绘缩放百分比（如 100 表示 100%），默认 100
-pt_x 整数 否 立绘 X 轴偏移百分比（可负），默认 0
-pt_y 整数 否 立绘 Y 轴偏移百分比（可负），默认 0
+| 参数 | 类型 | 必填 | 说明 |
+|------|------|------|------|
+| bg_type | 文本 | 是 | 背景类型：default（使用服务器背景）或 custom（自定义上传） |
+| bg_name | 文本 | 否 | 当 bg_type=default 时必填，背景文件名（如 bg1.jpg） |
+| bg_base64 | 文本 | 否 | 当 bg_type=custom 时必填，自定义背景图的 Base64 数据 |
+| portrait | 文本 | 是 | 立绘文件名（如 role1.png），需存在于服务器 img 目录 |
+| font | 文本 | 是 | 字体文件名（如 simhei.ttf），需存在于服务器 ttf 目录 |
+| text | 文本 | 是 | 渲染的文字，支持 \n 换行 |
+| size | 整数 | 否 | 字体大小，默认 24 |
+| color | 文本 | 否 | 文字颜色 HEX 码，例如 #ff0000，默认 #000000 |
+| align | 文本 | 否 | 对齐方式：left，center，right，默认 center |
+| pt_scale | 整数 | 否 | 立绘缩放百分比（如 100 表示 100%），默认 100 |
+| pt_x | 整数 | 否 | 立绘 X 轴偏移百分比（可负），默认 0 |
+| pt_y | 整数 | 否 | 立绘 Y 轴偏移百分比（可负），默认 0 |
 
 示例响应：
 
