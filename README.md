@@ -33,16 +33,22 @@
 
 ---
 
-📡 API 接口文档
+根据排版系统重构后的最新流式排版设计（支持多子文本、自定义图片插图、彩色 Emoji 以及自动折行），我为你重新整理并更新了 API 接口文档。
 
-1. 获取初始化数据
+原先根节点的文本控制参数（`text`、`size`、`color`、`align`、`font`）已全部整合并升华为 `elements` 嵌套 JSON 数组。
 
-用于拉取当前可用的背景、立绘、字体列表。
+---
 
-· 请求方法：GET
-· URL：https://api.xiaomiaoica.wiki/anan/api.php?action=get_init_data
+# 📡 API 接口文档
 
-示例响应：
+## 1. 获取初始化数据
+
+用于拉取当前服务器上可用的背景、立绘、字体列表。
+
+* **请求方法**：`GET`
+* **URL**：`https://api.xiaomiaoica.wiki/anan/api.php?action=get_init_data`
+
+### 示例响应：
 
 ```json
 {
@@ -57,32 +63,84 @@
 
 ---
 
-2. 渲染合成图片
+## 2. 渲染合成图片
 
-提交所有参数，由服务器合成最终立绘图片并返回 Base64 数据。
+提交背景、立绘参数及排版元素（JSON 格式），由服务器进行流式排版、Emoji 智能解析渲染，并返回合成后的 Base64 图片数据。
 
-· 请求方法：POST
-· Content-Type：multipart/form-data
-· URL：https://api.xiaomiaoica.wiki/anan/api.php?action=render
+* **请求方法**：`POST`
+* **Content-Type**：`multipart/form-data`
+* **URL**：`https://api.xiaomiaoica.wiki/anan/api.php?action=render`
 
-请求参数
+### 请求参数
 
 | 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| bg_type | 文本 | 是 | 背景类型：default（使用服务器背景）或 custom（自定义上传） |
-| bg_name | 文本 | 否 | 当 bg_type=default 时必填，背景文件名（如 bg1.jpg） |
-| bg_base64 | 文本 | 否 | 当 bg_type=custom 时必填，自定义背景图的 Base64 数据 |
-| portrait | 文本 | 是 | 立绘文件名（如 role1.png），需存在于服务器 img 目录 |
-| font | 文本 | 是 | 字体文件名（如 simhei.ttf），需存在于服务器 ttf 目录 |
-| text | 文本 | 是 | 渲染的文字，支持 \n 换行 |
-| size | 整数 | 否 | 字体大小，默认 24 |
-| color | 文本 | 否 | 文字颜色 HEX 码，例如 #ff0000，默认 #000000 |
-| align | 文本 | 否 | 对齐方式：left，center，right，默认 center |
-| pt_scale | 整数 | 否 | 立绘缩放百分比（如 100 表示 100%），默认 100 |
-| pt_x | 整数 | 否 | 立绘 X 轴偏移百分比（可负），默认 0 |
-| pt_y | 整数 | 否 | 立绘 Y 轴偏移百分比（可负），默认 0 |
+| :--- | :--- | :--- | :--- |
+| **bg_type** | 文本 | 是 | 背景类型：`default`（使用服务器背景）或 `custom`（自定义上传） |
+| **bg_name** | 文本 | 否 | 当 `bg_type=default` 时必填。背景文件名（如 `bg1.jpg`） |
+| **bg_base64** | 文本 | 否 | 当 `bg_type=custom` 时必填。自定义背景图的 Base64 数据（需带 Data URL 前缀） |
+| **portrait** | 文本 | 是 | 立绘文件名（如 `role1.png`），需存在于服务器 `img` 目录下 |
+| **pt_scale** | 整数 | 否 | 立绘缩放百分比（如 `100` 表示 100%），默认 `100` |
+| **pt_x** | 整数 | 否 | 立绘 X 轴偏移百分比（可为负数），默认 `0` |
+| **pt_y** | 整数 | 否 | 立绘 Y 轴偏移百分比（可为负数），默认 `0` |
+| **elements** | 文本 (JSON) | 是 | 核心排版元素数组，详见下方 **`elements` 结构说明** |
+| **debug** | 文本 | 否 | 调试模式：`1`（在图片上绘制红色/绿色配字安全区边界和溢出警告）或 `0`（默认，不绘制） |
 
-示例响应：
+---
+
+### `elements` JSON 结构说明
+
+`elements` 参数接收一个 **JSON 格式的数组**。数组中的每一个对象代表一个排版图层。系统会按照数组的先后顺序，在立绘同名 `.txt` 规定的安全区域内，**自上而下自动流式排版并自动换行**。
+
+#### A. 文本图层对象属性 (`type="text"`)
+
+| 属性 | 类型 | 必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| **type** | 文本 | 是 | 固定为 `"text"` |
+| **content** | 文本 | 是 | 文本内容。**支持原生彩色 Emoji**（如 `❤️❤️`），支持 `\n` 强制换行，超出安全宽度时会自动折行 |
+| **font** | 文本 | 是 | 字体文件名（如 `simhei.ttf`），需存在于服务器 `ttf` 目录 |
+| **size** | 整数 | 是 | 字体大小（像素值，如 `28`） |
+| **color** | 文本 | 是 | 文字颜色 HEX 码（如 `"#333333"`） |
+| **align** | 文本 | 是 | 段落对齐方式：`"left"`（左对齐）、`"center"`（居中对齐）、`"right"`（右对齐） |
+| **marginBottom** | 整数 | 是 | 段后距（像素值，控制与下方元素的间距，如 `15`） |
+
+#### B. 图片图层对象属性 (`type="image"`)
+
+| 属性 | 类型 | 必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| **type** | 文本 | 是 | 固定为 `"image"` |
+| **fileBase64** | 文本 | 是 | 插入图片的 Base64 数据（需带 `data:image/...;base64,` 前缀） |
+| **scale** | 整数 | 是 | 宽度占比百分比（`10` 到 `100`），表示占安全排版区域宽度的比例 |
+| **align** | 文本 | 是 | 图片对齐方式：`"left"`（靠左）、`"center"`（居中）、`"right"`（靠右） |
+| **marginBottom** | 整数 | 是 | 图后距（像素值，控制与下方元素的间距，如 `15`） |
+
+#### `elements` 参数 JSON 示例如下：
+
+```json
+[
+  {
+    "id": 0,
+    "type": "text",
+    "content": "夏目安安 ❤️ 自动换行测试 ✨",
+    "font": "simhei.ttf",
+    "size": 32,
+    "color": "#ff0000",
+    "align": "center",
+    "marginBottom": 20
+  },
+  {
+    "id": 1,
+    "type": "image",
+    "fileBase64": "data:image/png;base64,iVBORw0KGgoAAAANS...",
+    "scale": 80,
+    "align": "center",
+    "marginBottom": 15
+  }
+]
+```
+
+---
+
+### 示例响应：
 
 ```json
 {
