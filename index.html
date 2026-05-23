@@ -30,6 +30,7 @@
         @keyframes moveBlob3 { 0% { transform: translate(0, 0) scale(1) rotate(0deg); } 50% { transform: translate(40vw, -10vh) scale(0.9) rotate(90deg); } 100% { transform: translate(20vw, -30vh) scale(1.1) rotate(180deg); } }
         @keyframes moveBlob4 { 0% { transform: translate(0, 0) scale(1) rotate(0deg); } 50% { transform: translate(-20vw, 30vh) scale(1.3) rotate(-90deg); } 100% { transform: translate(10vw, 20vh) scale(0.9) rotate(90deg); } }
 
+        /* 鼠标点击蝴蝶特效样式 */
         .butterfly-wrap {
             position: fixed; pointer-events: none; z-index: 9999;
             color: var(--fly-color); drop-shadow: 0 2px 6px rgba(0,0,0,0.3);
@@ -47,8 +48,7 @@
             border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08); border-radius: 20px;
         }
 
-        .controls { width: 380px; padding: 25px; margin-right: 30px; max-height: calc(100vh - 120px); overflow-y: auto; transition: all 0.3s ease; flex-shrink: 0; }
-        .controls:hover { box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15); }
+        .controls { width: 420px; padding: 25px; margin-right: 30px; max-height: calc(100vh - 120px); overflow-y: auto; transition: all 0.3s ease; flex-shrink: 0; }
         .preview { flex: 1; padding: 25px; display: flex; flex-direction: column; }
 
         ::-webkit-scrollbar { width: 6px; }
@@ -61,15 +61,14 @@
         .form-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: #555; }
         
-        select, textarea, input[type="number"], input[type="file"] { 
+        select, textarea, input[type="text"], input[type="number"], input[type="file"] { 
             width: 100%; padding: 10px 12px; background: rgba(255, 255, 255, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 10px; outline: none;
             font-family: inherit; font-size: 14px; transition: all 0.3s ease;
         }
-        select:focus, textarea:focus, input[type="number"]:focus { background: rgba(255, 255, 255, 0.9); border-color: #a1c4fd; box-shadow: 0 0 0 3px rgba(161, 196, 253, 0.3); }
-        textarea { height: 80px; resize: vertical; }
+        select:focus, textarea:focus, input[type="text"]:focus, input[type="number"]:focus { background: rgba(255, 255, 255, 0.9); border-color: #a1c4fd; box-shadow: 0 0 0 3px rgba(161, 196, 253, 0.3); }
+        textarea { height: 60px; resize: vertical; }
         
-        /* 滑块样式美化 */
         input[type="range"] { width: 100%; -webkit-appearance: none; background: transparent; margin-bottom: 10px;}
         input[type="range"]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: rgba(255,255,255,0.8); border-radius: 3px; border: 1px solid #ddd;}
         input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #a1c4fd; margin-top: -6px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
@@ -78,26 +77,26 @@
         .radio-group label { margin: 0; font-weight: normal; cursor: pointer; display: flex; align-items: center; gap: 5px;}
         input[type="radio"] { accent-color: #a1c4fd; transform: scale(1.1); cursor: pointer;}
 
-        input[type="color"] { -webkit-appearance: none; border: none; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0; }
+        input[type="color"] { -webkit-appearance: none; border: none; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; padding: 0; }
         input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
         input[type="color"]::-webkit-color-swatch { border: none; border-radius: 8px; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: bold; letter-spacing: 1px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); display: block; text-align: center; text-decoration: none; }
-        .btn-primary { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); color: #444; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(161, 196, 253, 0.4); }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(161, 196, 253, 0.6); background: linear-gradient(135deg, #8cb5f9 0%, #aae0fa 100%); }
-        .btn-primary:active { transform: translateY(1px); }
-        .btn-success { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); color: #333; display: none; box-shadow: 0 4px 15px rgba(132, 250, 176, 0.4); }
-        .btn-success:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(132, 250, 176, 0.6); }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: bold; letter-spacing: 1px; transition: all 0.3s; display: block; text-align: center; text-decoration: none; margin-bottom: 10px;}
+        .btn-primary { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); color: #444; box-shadow: 0 4px 15px rgba(161, 196, 253, 0.4); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(161, 196, 253, 0.6); }
+        .btn-success { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); color: #333; display: none;}
+        .btn-danger { background: #ff9a9e; color: #fff; padding: 6px 10px; font-size: 12px; border-radius: 6px;}
 
-        .img-container { flex: 1; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.2); border: 2px dashed rgba(255, 255, 255, 0.8); border-radius: 16px; overflow: hidden; margin-bottom: 15px; min-height: 400px; transition: all 0.3s ease; padding: 10px; }
-        .img-container:hover { background: rgba(255, 255, 255, 0.4); }
-        img#result-img { max-width: 100%; max-height: 80vh; display: none; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+        /* 元素卡片样式 */
+        .element-card { background: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.6); border-radius: 12px; padding: 15px; margin-bottom: 15px; position: relative; }
+        .element-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: bold; font-size: 14px; color: #444; border-bottom: 1px dashed #ccc; padding-bottom: 5px;}
+        .element-row { display: flex; gap: 10px; margin-bottom: 10px; align-items: center;}
+        .element-controls { display: flex; gap: 10px; }
+
+        .img-container { flex: 1; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.2); border: 2px dashed rgba(255, 255, 255, 0.8); border-radius: 16px; overflow: hidden; margin-bottom: 15px; min-height: 400px; padding: 10px; }
+        img#result-img { max-width: 100%; max-height: 80vh; display: none; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
 
         .loading { color: #555; font-size: 14px; display: none; text-align: center; margin-bottom: 15px; font-weight: bold; }
-        .loading::after { content: '...'; animation: dots 1.5s steps(4, end) infinite; }
-        @keyframes dots { 0%, 20% { color: rgba(0,0,0,0); text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); } 40% { color: #555; text-shadow: .25em 0 0 rgba(0,0,0,0), .5em 0 0 rgba(0,0,0,0); } 60% { text-shadow: .25em 0 0 #555, .5em 0 0 rgba(0,0,0,0); } 80%, 100% { text-shadow: .25em 0 0 #555, .5em 0 0 #555; } }
-
         #custom-bg-div { display: none; margin-top: 10px; }
 
         /* 底部备案与 GitHub 样式 */
@@ -115,21 +114,16 @@
             .controls { width: 100%; margin-right: 0; margin-bottom: 20px; max-height: none; }
             .preview { width: 100%; padding: 20px 15px; }
             .img-container { min-height: 250px; }
-            .blob { width: 90vw; height: 90vw; }
             .footer { flex-direction: column; gap: 10px; padding: 20px; }
         }
     </style>
 </head>
 <body>
-
     <div class="fluid-bg">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-        <div class="blob blob-4"></div>
+        <div class="blob blob-1"></div><div class="blob blob-2"></div>
+        <div class="blob blob-3"></div><div class="blob blob-4"></div>
     </div>
 
-    <!-- 主体内容区 -->
     <div class="main-content">
         <div class="controls glass-panel">
             <h3>✨ 编辑控制台</h3>
@@ -142,7 +136,7 @@
                 </div>
                 <select id="bg-select" onchange="updatePreview()"></select>
                 <div id="custom-bg-div">
-                    <input type="file" id="custom-bg-file" accept="image/png, image/jpeg" onchange="handleFileUpload(event)">
+                    <input type="file" id="custom-bg-file" accept="image/*" onchange="handleBgUpload(event)">
                 </div>
             </div>
 
@@ -151,60 +145,41 @@
                 <select id="portrait-select" onchange="updatePreview()"></select>
             </div>
 
-            <!-- 立绘位置与缩放调整 -->
             <div class="form-group" style="background: rgba(255,255,255,0.4); padding: 15px; border-radius: 10px;">
-                <label style="margin-bottom: 10px;">🎨 调整立绘位置与大小</label>
-                
-                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">大小缩放 (<span id="val-scale">100</span>%)</div>
+                <label style="margin-bottom: 10px;">🎨 立绘全局位置与大小</label>
+                <div style="font-size: 12px; color: #666;">大小缩放 (<span id="val-scale">100</span>%)</div>
                 <input type="range" id="pt-scale" min="10" max="300" value="100" oninput="updateRangeVal('scale')" onchange="debounceUpdate()">
-                
-                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">水平位置 X (<span id="val-x">0</span>%)</div>
+                <div style="font-size: 12px; color: #666;">水平位置 X (<span id="val-x">0</span>%)</div>
                 <input type="range" id="pt-x" min="-100" max="100" value="0" oninput="updateRangeVal('x')" onchange="debounceUpdate()">
-                
-                <div style="font-size: 12px; color: #666; margin-bottom: 5px;">垂直位置 Y (<span id="val-y">0</span>%)</div>
+                <div style="font-size: 12px; color: #666;">垂直位置 Y (<span id="val-y">0</span>%)</div>
                 <input type="range" id="pt-y" min="-100" max="100" value="0" oninput="updateRangeVal('y')" onchange="debounceUpdate()">
             </div>
 
+            <!-- 自定义流式排版元素管理器 -->
             <div class="form-group">
-                <label>3. 字体与大小</label>
-                <div style="display: flex; gap: 10px;">
-                    <select id="font-select" style="flex: 2;" onchange="updatePreview()"></select>
-                    <input type="number" id="size-input" style="flex: 1;" value="28" onchange="updatePreview()">
+                <label>3. 排版内容 (按先后顺序自动向下排列)</label>
+                <div class="element-controls">
+                    <button class="btn btn-primary" style="flex:1" onclick="addElement('text')">+ 插入文本段落</button>
+                    <button class="btn btn-primary" style="flex:1" onclick="addElement('image')">+ 插入图片</button>
                 </div>
+                <div id="elements-container" style="margin-top: 15px;"></div>
             </div>
 
-            <div class="form-group">
-                <label>4. 文本内容 (支持换行)</label>
-                <textarea id="text-input" onkeyup="debounceUpdate()">何意味</textarea>
-            </div>
-
-            <div class="form-group">
-                <label>5. 样式设置</label>
-                <div style="display: flex; gap: 15px; align-items: center;">
-                    <input type="color" id="color-input" value="#333333" onchange="updatePreview()">
-                    <div class="radio-group" style="margin:0;" onchange="updatePreview()">
-                        <label><input type="radio" name="align" value="left"> 左</label>
-                        <label><input type="radio" name="align" value="center" checked> 中</label>
-                        <label><input type="radio" name="align" value="right"> 右</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="loading" id="loading-text">魔法合成中</div>
+            <div class="loading" id="loading-text">魔法合成中...</div>
             <button class="btn btn-primary" onclick="forceGenerate()">✨ 立即生成</button>
-            <a id="download-btn" class="btn btn-success" download="夏目安安_合成图.jpg">⬇️ 保存 / 下载图片</a>
+            <a id="download-btn" class="btn btn-success" download="夏目安安_排版图.png">⬇️ 保存 / 下载图片</a>
         </div>
 
         <div class="preview glass-panel" id="preview-area">
             <h3>🖼️ 最终效果预览</h3>
             <div class="img-container">
-                <span id="placeholder-text" style="color:#777; font-weight: bold; font-size: 16px; letter-spacing: 1px;">请在上方设置并生成特效图片</span>
+                <span id="placeholder-text" style="color:#777; font-weight: bold;">请在上方设置并生成特效图片</span>
                 <img id="result-img" src="" alt="预览图">
             </div>
         </div>
     </div>
 
-    <!-- 底部备案与链接区 -->
+    <!-- 底部备案与 GitHub 导航区 -->
     <div class="footer">
         <span id="footer-copyright">加载中...</span>
         <a id="footer-github" href="#" target="_blank" title="访问 GitHub">
@@ -216,19 +191,19 @@
     </div>
 
     <script>
-        // ================= 网页配置 =================
+        // ================== 全局自定义配置区域 ==================
         const CONFIG = {
             API_URL: './api.php',
             COPYRIGHT: '© 2025 XiaoMiao_ICa 辽ICP备2025069396号-2',
             GITHUB_LINK: 'https://github.com/MiaoluoYuanlina/AnAn_DrawingBoard_Production' 
         };
-        // =================================================================
+        // =======================================================
 
-        // 页面加载时注入配置信息
+        // 页面加载时动态注入配置信息
         document.getElementById('footer-copyright').innerText = CONFIG.COPYRIGHT;
         document.getElementById('footer-github').href = CONFIG.GITHUB_LINK;
 
-        // JS 特效：标签页切换修改标题
+        // 彩蛋：标签页切换修改标题
         const originalTitle = document.title; 
         let titleTimeout;
         document.addEventListener('visibilitychange', function() {
@@ -240,7 +215,7 @@
             }
         });
 
-        // 纯色 SVG 蝴蝶
+        // 纯色 SVG 蝴蝶样式
         const butterflySVG = `
             <svg viewBox="0 0 1024 1024" width="100%" height="100%" fill="currentColor">
                 <path d="M512 490.666667C418.133333 256 221.866667 128 42.666667 170.666667-85.333333 202.666667 0 384 170.666667 469.333333 341.333333 554.666667 469.333333 469.333333 512 490.666667z"/>
@@ -250,8 +225,9 @@
             </svg>
         `;
 
+        // 鼠标点击生成蝴蝶特效
         document.addEventListener('click', function(e) {
-            // 防止点击底部链接时触发蝴蝶
+            // 防止点击底部备案链接时触发蝴蝶
             if(e.target.closest('.footer')) return; 
 
             const butterflyCount = Math.floor(Math.random() * 3) + 4; 
@@ -283,10 +259,14 @@
             }
         });
 
+        window.SHOW_DEBUG_BOX = false; // 按 F12 在控制台输入 window.SHOW_DEBUG_BOX = true 开启排版辅助红框
+
         let customBgBase64 = ""; 
+        let globalFonts = []; 
+        let elements = []; 
+        let elementIdCounter = 0;
         let timeout = null;
 
-        // 更新滑块显示的数值
         function updateRangeVal(type) {
             document.getElementById(`val-${type}`).innerText = document.getElementById(`pt-${type}`).value;
         }
@@ -295,33 +275,139 @@
             clearTimeout(timeout);
             timeout = setTimeout(() => updatePreview(false), 600);
         }
-
         function forceGenerate() { updatePreview(true); }
 
         function toggleBgMode() {
             const mode = document.querySelector('input[name="bg_mode"]:checked').value;
-            if (mode === 'default') {
-                document.getElementById('bg-select').style.display = 'block';
-                document.getElementById('custom-bg-div').style.display = 'none';
-                updatePreview(false);
-            } else {
-                document.getElementById('bg-select').style.display = 'none';
-                document.getElementById('custom-bg-div').style.display = 'block';
-                if(customBgBase64) updatePreview(false); 
-            }
+            document.getElementById('bg-select').style.display = mode === 'default' ? 'block' : 'none';
+            document.getElementById('custom-bg-div').style.display = mode === 'custom' ? 'block' : 'none';
+            updatePreview(false);
         }
 
-        function handleFileUpload(event) {
+        function handleBgUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(e) { customBgBase64 = e.target.result; updatePreview(false); };
+            reader.onload = e => { customBgBase64 = e.target.result; updatePreview(false); };
             reader.readAsDataURL(file);
         }
 
+        // 排版元素管理器
+        function addElement(type) {
+            const id = elementIdCounter++;
+            if (type === 'text') {
+                elements.push({
+                    id, type: 'text', content: '何意味', font: globalFonts[0] || '',
+                    size: 28, color: '#333333', align: 'center', marginBottom: 15
+                });
+            } else if (type === 'image') {
+                elements.push({
+                    id, type: 'image', fileBase64: '', scale:100, align: 'center', marginBottom: 15
+                });
+            }
+            renderElements();
+            debounceUpdate();
+        }
+
+        function removeElement(id) {
+            elements = elements.filter(el => el.id !== id);
+            renderElements();
+            debounceUpdate();
+        }
+
+        function updateElement(id, key, value) {
+            const el = elements.find(e => e.id === id);
+            if (el) el[key] = value;
+            debounceUpdate();
+        }
+
+        function updateElementVal(id, key, value) {
+            const el = elements.find(e => e.id === id);
+            if (el) el[key] = value;
+            
+            const indicator = document.getElementById(`val-el-${id}-${key}`);
+            if (indicator) {
+                indicator.innerText = value;
+            }
+            debounceUpdate();
+        }
+
+        function handleElementImageUpload(event, id) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                updateElement(id, 'fileBase64', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function renderElements() {
+            const container = document.getElementById('elements-container');
+            container.innerHTML = '';
+            
+            elements.forEach((el, index) => {
+                const card = document.createElement('div');
+                card.className = 'element-card';
+                
+                let innerHTML = `<div class="element-header">
+                    <span>${el.type === 'text' ? '📝 文本段落' : '🖼️ 插入图片'} #${index + 1}</span>
+                    <button class="btn btn-danger" onclick="removeElement(${el.id})">删除</button>
+                </div>`;
+
+                if (el.type === 'text') {
+                    let fontOptions = globalFonts.map(f => `<option value="${f}" ${f===el.font?'selected':''}>${f}</option>`).join('');
+                    innerHTML += `
+                        <textarea oninput="updateElement(${el.id}, 'content', this.value)">${el.content}</textarea>
+                        <div class="element-row" style="margin-top:10px;">
+                            <select style="flex:2" onchange="updateElement(${el.id}, 'font', this.value)">${fontOptions}</select>
+                            <input type="number" style="flex:1" value="${el.size}" title="字号" oninput="updateElement(${el.id}, 'size', this.value)">
+                            <input type="color" value="${el.color}" onchange="updateElement(${el.id}, 'color', this.value)">
+                        </div>
+                        <div class="element-row">
+                            <select style="flex:1" onchange="updateElement(${el.id}, 'align', this.value)">
+                                <option value="left" ${el.align==='left'?'selected':''}>左对齐</option>
+                                <option value="center" ${el.align==='center'?'selected':''}>居中对齐</option>
+                                <option value="right" ${el.align==='right'?'selected':''}>右对齐</option>
+                            </select>
+                        </div>
+                    `;
+                } else if (el.type === 'image') {
+                    innerHTML += `
+                        <input type="file" accept="image/*" onchange="handleElementImageUpload(event, ${el.id})">
+                        <div class="element-row" style="margin-top:10px;">
+                            <span style="font-size:12px; width:120px; flex-shrink:0;">宽度占比 (<span id="val-el-${el.id}-scale">${el.scale}</span>%)</span>
+                            <input type="range" min="10" max="100" value="${el.scale}" oninput="updateElementVal(${el.id}, 'scale', this.value)">
+                        </div>
+                        <div class="element-row">
+                            <select style="flex:1" onchange="updateElement(${el.id}, 'align', this.value)">
+                                <option value="left" ${el.align==='left'?'selected':''}>左靠齐</option>
+                                <option value="center" ${el.align==='center'?'selected':''}>居中对齐</option>
+                                <option value="right" ${el.align==='right'?'selected':''}>右靠齐</option>
+                            </select>
+                        </div>
+                    `;
+                }
+
+                innerHTML += `
+                    <div class="element-row" style="margin-top:10px;">
+                        <span style="font-size:12px; width:120px; flex-shrink:0;">段后距 (<span id="val-el-${el.id}-marginBottom">${el.marginBottom}</span>px)</span>
+                        <input type="range" min="0" max="100" value="${el.marginBottom}" oninput="updateElementVal(${el.id}, 'marginBottom', this.value)">
+                    </div>
+                `;
+
+                card.innerHTML = innerHTML;
+                container.appendChild(card);
+            });
+        }
+
         window.onload = function() {
+            console.log("%c✨ 夏目安安流式排版系统 调试指南 ✨", "color: #a1c4fd; font-weight: bold; font-size: 16px;");
+            console.log("想要查看自动排版安全框边界？请在控制台运行以下代码：");
+            console.log("%cwindow.SHOW_DEBUG_BOX = true; forceGenerate();", "color: #ff9a9e; font-weight: bold; font-size: 14px; background: #fff5f5; padding: 4px 8px; border-radius: 4px;");
+
             fetch(`${CONFIG.API_URL}?action=get_init_data`)
-                .then(response => response.json())
+                .then(res => res.json())
                 .then(res => {
                     if(res.status === 'success') {
                         const bgSelect = document.getElementById('bg-select');
@@ -330,45 +416,34 @@
                         const portraitSelect = document.getElementById('portrait-select');
                         res.data.img.forEach(img => portraitSelect.add(new Option(img, img)));
 
-                        const fontSelect = document.getElementById('font-select');
-                        res.data.fonts.forEach(font => fontSelect.add(new Option(font, font)));
-
-                        if(res.data.img.length > 0 && res.data.fonts.length > 0) updatePreview(false);
+                        globalFonts = res.data.fonts; 
+                        
+                        if(globalFonts.length > 0) addElement('text');
                     }
-                })
-                .catch(err => console.error("加载初始数据失败", err));
+                });
         };
 
         function updatePreview(isManualClick = false) {
-            const bgMode = document.querySelector('input[name="bg_mode"]:checked').value;
-            const bgName = document.getElementById('bg-select').value;
             const portrait = document.getElementById('portrait-select').value;
-            const font = document.getElementById('font-select').value;
-            
-            if (!portrait || !font) return;
-            if (bgMode === 'custom' && !customBgBase64) return; 
+            if (!portrait) return;
 
             document.getElementById('loading-text').style.display = 'block';
             document.getElementById('download-btn').style.display = 'none';
 
             const formData = new FormData();
-            formData.append('bg_type', bgMode);
-            formData.append('bg_name', bgName);
+            formData.append('bg_type', document.querySelector('input[name="bg_mode"]:checked').value);
+            formData.append('bg_name', document.getElementById('bg-select').value);
             formData.append('bg_base64', customBgBase64);
             formData.append('portrait', portrait);
-            formData.append('font', font);
-            formData.append('size', document.getElementById('size-input').value);
-            formData.append('color', document.getElementById('color-input').value);
-            formData.append('align', document.querySelector('input[name="align"]:checked').value);
-            formData.append('text', document.getElementById('text-input').value);
             
-            // 向后端发送位置和缩放参数
             formData.append('pt_scale', document.getElementById('pt-scale').value);
             formData.append('pt_x', document.getElementById('pt-x').value);
             formData.append('pt_y', document.getElementById('pt-y').value);
+            formData.append('elements', JSON.stringify(elements));
+            formData.append('debug', window.SHOW_DEBUG_BOX ? '1' : '0');
 
             fetch(`${CONFIG.API_URL}?action=render`, { method: 'POST', body: formData })
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 document.getElementById('loading-text').style.display = 'none';
                 if (data.status === 'success') {
@@ -378,17 +453,15 @@
                     
                     const downloadBtn = document.getElementById('download-btn');
                     downloadBtn.href = data.image; downloadBtn.style.display = 'block';
-
+                    
                     if (isManualClick && window.innerWidth <= 850) {
                         document.getElementById('preview-area').scrollIntoView({ behavior: 'smooth' });
                     }
                 } else {
                     alert('生成失败: ' + data.error);
                 }
-            })
-            .catch(err => {
+            }).catch(() => {
                 document.getElementById('loading-text').style.display = 'none';
-                alert('网络请求失败');
             });
         }
     </script>
